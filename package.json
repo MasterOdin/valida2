@@ -39,12 +39,7 @@
   "engines": {
     "node": ">= 0.10.7"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://github.com/esnunes/valida/raw/master/LICENSE"
-    }
-  ],
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/esnunes/valida/issues"
   },
