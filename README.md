@@ -1,6 +1,6 @@
 # Valida
-[![Build Status](https://travis-ci.org/esnunes/valida.svg?branch=master)](https://travis-ci.org/esnunes/valida)
-[![npm version](https://badge.fury.io/js/valida.svg)](http://badge.fury.io/js/valida)
+![Test](https://github.com/MasterOdin/valida2/workflows/Test/badge.svg?branch=master)
+![npm](https://img.shields.io/npm/v/valida2)
 
 Valida - A lightweight sanitizer and validator
 library for Node.js.
