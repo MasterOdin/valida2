@@ -1,4 +1,5 @@
 # Valida
+
 ![Test](https://github.com/MasterOdin/valida2/workflows/Test/badge.svg?branch=master)
 ![npm](https://img.shields.io/npm/v/valida2)
 
@@ -8,6 +9,7 @@ library for Node.js.
 This document describes how Valida library works and which features it offers. Each section of this document includes usage examples. You can find additional examples at [examples](https://github.com/esnunes/valida/tree/master/examples) folder.
 
 ## Simple example
+
 ```javascript
 var schema = {
   id: [
@@ -37,10 +39,11 @@ Valida.process(person, schema, function(err, ctx) {
 ```
 
 ## Features
-- Sanitization
-- Synchronous and asynchronous validation
-- Groups
-- Extensible
+
+* Sanitization
+* Synchronous and asynchronous validation
+* Groups
+* Extensible
 
 All the features are applied through the `process` function.
 
@@ -52,13 +55,13 @@ Valida.process(
   @group
 );
 ```
+
 **options:**
 
 * `@data` is the object to be applied the sanitization and validation
 * `@schema` is an object describing to Valida how to process it
 * `@callback` is a function that is going to be called after processing the data
 * `@group` is a string or array describing which groups must be applied in this process (optional)
-
 
 ### Sanitization
 
@@ -190,6 +193,7 @@ Valida supports both synchronous and asynchronous validation.
 * `bool`
 * `float`
 * `range`
+* `custom`
 
 #### required
 
@@ -331,6 +335,22 @@ Field value must be between a min and/or max value.
 ```js
 var schema = {
   code: [{ validator: Valida.Validator.range, min: 0, max: 10 }]
+};
+```
+
+#### Custom
+
+Set any function to be used within valida.
+
+**options:**
+
+* `validation`: The validation function to be used
+* `key`: The validation name
+* `msg`: The message you want to show when the validation fails
+
+```js
+var schema = {
+  age: [{ validator: Valida.Validator.custom, validation: (value) => value > 18, key: 'older than 18', msg: 'you must be older than 18' }]
 };
 ```
 
