@@ -37,7 +37,7 @@
   },
   "main": "lib/index",
   "engines": {
-    "node": ">= 8"
+    "node": ">= 6"
   },
   "license": "MIT",
   "bugs": {
@@ -46,8 +46,8 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^5.16.0",
-    "mocha": "^7.1.2",
-    "nyc": "^15.0.1"
+    "mocha": "^6.2.3",
+    "nyc": "^14.1.1"
   },
   "nyc": {
     "include": "lib",
