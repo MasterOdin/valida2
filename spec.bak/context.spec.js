@@ -1,71 +1,8 @@
+const Context = require('../lib/context');
+const valida = require('../lib');
 const expect = require('chai').expect;
 
-const valida = require('../');
-const Valida = require('../lib/valida');
-
-describe('valida', () => {
-  describe('return interfaces', () => {
-    const schema = {
-      age: [{sanitizer: valida.Sanitizer.toInt}],
-    };
-    const data = {age: '50'};
-
-    describe('callback interface', () => {
-      it('use callback if third arg is function', (done) => {
-        valida.process(data, schema, (err) => {
-          if (err) {
-            return done(err);
-          }
-          expect(data.age).to.eql(50);
-          done();
-        });
-      });
-
-      it('use callback if fourth arg is function', (done) => {
-        valida.process(data, schema, [], (err) => {
-          if (err) {
-            return done(err);
-          }
-          expect(data.age).to.eql(50);
-          done();
-        });
-      });
-
-      it('use callback to catch error', (done) => {
-        valida.process(data, {age: [{validator: 'foo bar baz'}]}, (err) => {
-          expect(err).to.not.be.undefined;
-          expect(err.message).to.eql('invalid validator foo bar baz');
-          done();
-        });
-      });
-    });
-
-    describe('promise interface', () => {
-      it('use promise if no third or fourth arg', (done) => {
-        valida.process(data, schema).then(() => {
-          expect(data.age).to.eql(50);
-          done();
-        }).catch((err) => done(err));
-      });
-
-      it('use promise if third arg is non-function', (done) => {
-        valida.process(data, schema, []).then(() => {
-          expect(data.age).to.eql(50);
-          done();
-        }).catch((err) => done(err));
-      });
-
-      it('catch errors for promise', (done) => {
-        valida.process(data, {age: [{validator: 'invalid-validator'}]}).then(() => {
-          done(false);
-        }).catch((err) => {
-          expect(err.message).to.eql('invalid validator invalid-validator');
-          done();
-        });
-      });
-    });
-  });
-
+describe('Context', () => {
   describe('groups', () => {
     describe('group set only in schema', () => {
       const schema = {
@@ -77,15 +14,16 @@ describe('valida', () => {
 
       it('should sanitize and validate', (done) => {
         const data = {age: '50'};
-        valida.process(data, schema, (err, ctx) => {
+        const ctx = new Context(valida, data, schema, [], (err, ctx) => {
           if (err) {
-            done(err);
+            return done(err);
           }
           expect(data.age).to.eql(50);
           expect(ctx.isValid()).to.be.false;
           expect(ctx.errors()).to.eql({age: [{validator: 'range', min: 0, max: 49}]});
           done();
         });
+        ctx.run();
       });
     });
 
@@ -99,15 +37,16 @@ describe('valida', () => {
 
       it('should sanitize and validate', (done) => {
         const data = {age: '50'};
-        valida.process(data, schema, ['foo'], (err, ctx) => {
+        const ctx = new Context(valida, data, schema, ['foo'], (err, ctx) => {
           if (err) {
-            done(err);
+            return done(err);
           }
           expect(data.age).to.eql(50);
           expect(ctx.isValid()).to.be.false;
           expect(ctx.errors()).to.eql({age: [{validator: 'range', min: 0, max: 49}]});
           done();
         });
+        ctx.run();
       });
     });
 
@@ -121,52 +60,56 @@ describe('valida', () => {
       const data = {age: '50'};
 
       it('should run rules that match at least one group in process', (done) => {
-        valida.process(data, schema, ['baz', 'bar', 'foo'], (err, ctx) => {
+        const ctx = new Context(valida, data, schema, ['baz', 'bar', 'foo'], (err, ctx) => {
           if (err) {
-            done(err);
+            return done(err);
           }
           expect(data.age).to.eql(50);
           expect(ctx.isValid()).to.be.false;
           expect(ctx.errors()).to.eql({age: [{validator: 'range', min: 0, max: 49}]});
           done();
         });
+        ctx.run();
       });
 
       it('should exclude validation rules that do not match group', (done) => {
-        valida.process(data, schema, ['foo'], (err, ctx) => {
+        const ctx = new Context(valida, data, schema, ['foo'], (err, ctx) => {
           if (err) {
-            done(err);
+            return done(err);
           }
           expect(data.age).to.eql(50);
           expect(ctx.isValid()).to.be.true;
           expect(ctx.errors()).to.eql({});
           done();
         });
+        ctx.run();
       });
 
       it('should exclude validation rules that do not match group', (done) => {
         const data = {age: 50.5};
-        valida.process(data, schema, ['bar'], (err, ctx) => {
+        const ctx = new Context(valida, data, schema, ['bar'], (err, ctx) => {
           if (err) {
-            done(err);
+            return done(err);
           }
           expect(data.age).to.eql(50.5);
           expect(ctx.isValid()).to.be.false;
           expect(ctx.errors()).to.eql({age: [{validator: 'range', min: 0, max: 49}]});
           done();
         });
+        ctx.run();
       });
 
       it('should work passing group into process as string', (done) => {
-        valida.process(data, schema, 'foo', (err, ctx) => {
+        const ctx = new Context(valida, data, schema, ['foo'], (err, ctx) => {
           if (err) {
-            done(err);
+            return done(err);
           }
           expect(data.age).to.eql(50);
           expect(ctx.isValid()).to.be.true;
           expect(ctx.errors()).to.eql({});
           done();
         });
+        ctx.run();
       });
     });
   });
@@ -179,14 +122,15 @@ describe('valida', () => {
         ],
       };
       const data = {age: '50'};
-      valida.process(data, schema, (err) => {
+      const ctx = new Context(valida, data, schema, [], (err) => {
         if (!err) {
-          done(false);
+          expect.fail('Error not returned');
         }
         expect(err.message).to.eql('invalid sanitizer totally-invalid');
         expect(data).to.eql({age: '50'});
         done();
       });
+      ctx.run();
     });
 
     it('passing invalid validator', (done) => {
@@ -196,14 +140,15 @@ describe('valida', () => {
         ],
       };
       const data = {age: '50'};
-      valida.process(data, schema, (err) => {
+      const ctx = new Context(valida, data, schema, [], (err) => {
         if (!err) {
-          done(false);
+          expect.fail('Error not returned');
         }
         expect(err.message).to.eql('invalid validator totally-invalid');
         expect(data).to.eql({age: '50'});
         done();
       });
+      ctx.run();
     });
 
     it('passing valid sanitizer and invalid validator should not affect data', (done) => {
@@ -214,36 +159,75 @@ describe('valida', () => {
         ],
       };
       const data = {age: '50'};
-      valida.process(data, schema, (err) => {
+      const ctx = new Context(valida, data, schema, [], (err) => {
         if (!err) {
-          done(false);
+          expect.fail('Error not returned');
         }
         expect(err.message).to.eql('invalid validator totally-invalid');
         expect(data).to.eql({age: '50'});
         done();
       });
+      ctx.run();
     });
   });
 
-  describe('setValidators', () => {
-    const check = new Valida();
-    expect(check.validators).to.be.empty;
-    const validatorSet = {
-      'checkRequired': valida.validators.required,
-      'isEmpty': valida.validators.empty,
+  describe('undefined values', () => {
+    const schema = {
+      age: [
+        {
+          sanitizer: valida.Sanitizer.toInt,
+          validator: valida.validators.empty,
+        },
+      ],
     };
-    check.setValidators(validatorSet);
-
-    expect(check.validators).to.eql(validatorSet);
+    it('should not sanitize undefined value', (done) => {
+      const data = {age: undefined};
+      const ctx = new Context(valida, data, schema, [], (err) => {
+        if (err) {
+          return done(err);
+        }
+        expect(data.age).to.be.undefined;
+        expect(ctx.isValid()).to.be.true;
+        done();
+      });
+      ctx.run();
+    });
   });
 
-  describe('setSanitizers', () => {
-    const check = new Valida();
-    expect(check.sanitizers).to.be.empty;
-    const sanitizerSet = {
-      'toInteger': valida.sanitizers.toInt,
-    };
-    check.setSanitizers(sanitizerSet);
-    expect(check.sanitizers).to.eql(sanitizerSet);
+  describe('async validator error', () => {
+    it('should bubble to error', (done) => {
+      const schema = {
+        fruits: [
+          {
+            validator: valida.Validator.schema,
+            schema: {
+              type: [{validator: 'not-a-real-validator'}],
+            },
+          },
+        ],
+      };
+      const data = {
+        fruits: [
+          {
+            type: 'apple',
+            cost: 1.11,
+          },
+          {
+            type: 'orange',
+            cost: 2.23,
+          },
+        ],
+      };
+
+      const ctx = new Context(valida, data, schema, [], (err, ctx) => {
+        if (!err) {
+          expect.fail();
+        }
+        expect(err.message).to.eql('');
+        expect(ctx.isValid());
+        done();
+      });
+      ctx.run();
+    });
   });
 });
