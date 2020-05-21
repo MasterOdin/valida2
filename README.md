@@ -1,7 +1,9 @@
 # Valida
 
-![Test](https://github.com/MasterOdin/valida2/workflows/Test/badge.svg?branch=master)
 ![npm](https://img.shields.io/npm/v/valida2)
+![Test](https://github.com/MasterOdin/valida2/workflows/Test/badge.svg?branch=master)
+[![codecov](https://codecov.io/gh/MasterOdin/valida2/branch/master/graph/badge.svg)](https://codecov.io/gh/MasterOdin/valida2)
+
 
 Valida - A lightweight sanitizer and validator
 library for Node.js.
