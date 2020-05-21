@@ -1,18 +1,28 @@
-# Valida
+# valida2
 
 ![npm](https://img.shields.io/npm/v/valida2)
 ![Test](https://github.com/MasterOdin/valida2/workflows/Test/badge.svg?branch=master)
 [![codecov](https://codecov.io/gh/MasterOdin/valida2/branch/master/graph/badge.svg)](https://codecov.io/gh/MasterOdin/valida2)
 
+__NOTE__: README is out-of-date as things get rebuilt for v3. Please see [v2.5.0 README](https://github.com/MasterOdin/valida2/blob/v2.5.0/README.md) for
+production usage.
 
-Valida - A lightweight sanitizer and validator
-library for Node.js.
+valida2 - A lightweight sanitizer and validator library for Node.js.
 
-This document describes how Valida library works and which features it offers. Each section of this document includes usage examples. You can find additional examples at [examples](https://github.com/esnunes/valida/tree/master/examples) folder.
+This document describes how the valida2 library works and which features it offers. Each section of this document includes usage examples.
+You can find additional examples at [examples](https://github.com/MasterOdin/valida2/tree/master/examples) folder.
 
-## Simple example
+## Installation
+
+```bash
+npm intall valida2
+```
+
+## Usage
 
 ```javascript
+const valida = require('valida2');
+
 var schema = {
   id: [
     { sanitizer: Valida.Sanitizer.toInt },
@@ -61,13 +71,13 @@ Valida.process(
 **options:**
 
 * `@data` is the object to be applied the sanitization and validation
-* `@schema` is an object describing to Valida how to process it
+* `@schema` is an object describing to valida2 how to process it
 * `@callback` is a function that is going to be called after processing the data
 * `@group` is a string or array describing which groups must be applied in this process (optional)
 
 ### Sanitization
 
-Valida supports synchronous sanitization.
+valida2 supports synchronous sanitization.
 
 * `toInt`
 * `toFloat`
@@ -340,22 +350,6 @@ var schema = {
 };
 ```
 
-#### Custom
-
-Set any function to be used within valida.
-
-**options:**
-
-* `validation`: The validation function to be used
-* `key`: The validation name
-* `msg`: The message you want to show when the validation fails
-
-```js
-var schema = {
-  age: [{ validator: Valida.Validator.custom, validation: (value) => value > 18, key: 'older than 18', msg: 'you must be older than 18' }]
-};
-```
-
 ### Groups
 
 Allows reuse the same schema validation for multiple actions. For example on creating an item a specific field is required. But on updating it that field is optional.
@@ -372,30 +366,3 @@ Valida.process(data, schema, function(err, ctx) {
 ```
 
 ### Extensible
-
-## Contributors
-Would you like to contribute to this library? Don't be shy! [Contact me](mailto:esnunes@gmail.com) if you are interested on it.
-
-## LICENSE
-
-(MIT License)
-
-Copyright (c) 2013 Eduardo Nunes <esnunes@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
