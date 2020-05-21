@@ -51,6 +51,90 @@ describe('sanitizers', () => {
   });
 
   describe('.toDate', () => {
+    ['1995-12-17T03:24:00', 'December 17, 1995 03:24:00'].forEach((value) => {
+      it(`returns date when passed string ${value}`, () => {
+        expect(sanitizers.toDate('December 17, 1995 03:24:00', {})).to.be.instanceOf(Date);
+      });
+    });
 
+    it('returns date when passed int', () => {
+      expect(sanitizers.toDate(1590021485700)).to.be.instanceof(Date);
+    });
+  });
+
+  describe('.trim', () => {
+    it('trims a string of whitespace', () => {
+      expect(sanitizers.trim('  \r\n\n\thello!\nYup!  ', {})).to.eql('hello!\nYup!');
+    });
+
+    it('trims a string of custom chars', () => {
+      expect(sanitizers.trim('(hello)', {chars: '()'})).to.eql('hello');
+    });
+  });
+
+  describe('.toString', () => {
+    [[1, '1'], [['aa', 'bb'], 'aa,bb']].forEach(([value, expected]) => {
+      it(`it converts ${expected} to string`, () => {
+        expect(sanitizers.toString(value)).to.eql(expected);
+      });
+    });
+  });
+
+  describe('.lowerCase', () => {
+    [
+      ['aaa', 'aaa'],
+      ['aBa', 'aba'],
+      ['Baa', 'baa'],
+      ['aaB', 'aab'],
+      ['BBB', 'bbb'],
+    ].forEach(([value, expected]) => {
+      it(`converts ${value} to ${expected}`, () => {
+        expect(sanitizers.lowerCase(value)).to.eql(expected);
+      });
+    });
+  });
+
+  describe('.upperCase', () => {
+    [
+      ['aaa', 'AAA'],
+      ['aBa', 'ABA'],
+      ['Baa', 'BAA'],
+      ['aaB', 'AAB'],
+      ['BBB', 'BBB'],
+    ].forEach(([value, expected]) => {
+      it(`converts ${value} to ${expected}`, () => {
+        expect(sanitizers.upperCase(value)).to.eql(expected);
+      });
+    });
+  });
+
+  describe('.titleCase', () => {
+    it('converts to title case', () => {
+      expect(sanitizers.titleCase('this Is a test for titleCase')).to.eql('This is a Test for titleCase');
+    });
+  });
+
+  describe('.upperCaseFirst', () => {
+    it('uppercases first letter', () => {
+      expect(sanitizers.upperCaseFirst('test')).to.eql('Test');
+    });
+  });
+
+  describe('.toBool', () => {
+    [
+      [true, true, 'true'],
+      [false, false, 'false'],
+      ['true', true, "'true'"],
+      ['false', false, "'false'"],
+      [1, true, '1'],
+      ['1', true, "'1'"],
+      [0, false, '0'],
+      [2, false, '2'],
+      ['test', false, "'test'"],
+    ].forEach(([value, expected, label]) => {
+      it(`converts ${label} to boolean`, () => {
+        expect(sanitizers.toBool(value)).to.eql(expected);
+      });
+    });
   });
 });
