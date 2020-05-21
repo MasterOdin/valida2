@@ -4,15 +4,15 @@ const expect = require('chai').expect;
 describe('sanitizers', () => {
   describe('.toInt', () => {
     it('converts string to integer', () => {
-      expect(sanitizers.toInt('5.5', {})).to.eql(5);
+      expect(sanitizers.toInt('5.5')).to.eql(5);
     });
 
     it('converts integer to integer', () => {
-      expect(sanitizers.toInt(5, {})).to.eql(5);
+      expect(sanitizers.toInt(5)).to.eql(5);
     });
 
     it('converts float to integer', () => {
-      expect(sanitizers.toInt(5.5, {})).to.eql(5);
+      expect(sanitizers.toInt(5.5)).to.eql(5);
     });
 
     it('allows specifying radix', () => {
@@ -20,21 +20,21 @@ describe('sanitizers', () => {
     });
 
     it('returns NaN for invalid numbers', () => {
-      expect(sanitizers.toInt('aaa', {})).to.be.NaN;
+      expect(sanitizers.toInt('aaa')).to.be.NaN;
     });
   });
 
   describe('.toFloat', () => {
     it('converts string to float', () => {
-      expect(sanitizers.toFloat('5.23', {})).to.eql(5.23);
+      expect(sanitizers.toFloat('5.23')).to.eql(5.23);
     });
 
     it('converts integer to float', () => {
-      expect(sanitizers.toFloat(5, {})).to.eql(5.0);
+      expect(sanitizers.toFloat(5)).to.eql(5.0);
     });
 
     it('converts float to float', () => {
-      expect(sanitizers.toFloat(5.5, {})).to.eql(5.5);
+      expect(sanitizers.toFloat(5.5)).to.eql(5.5);
     });
 
     it('truncates and rounds down float based on precision', () => {
@@ -46,14 +46,14 @@ describe('sanitizers', () => {
     });
 
     it('returns NaN for invalid number', () => {
-      expect(sanitizers.toFloat('aaa', {})).to.be.NaN;
+      expect(sanitizers.toFloat('aaa')).to.be.NaN;
     });
   });
 
   describe('.toDate', () => {
     ['1995-12-17T03:24:00', 'December 17, 1995 03:24:00'].forEach((value) => {
       it(`returns date when passed string ${value}`, () => {
-        expect(sanitizers.toDate('December 17, 1995 03:24:00', {})).to.be.instanceOf(Date);
+        expect(sanitizers.toDate('December 17, 1995 03:24:00')).to.be.instanceOf(Date);
       });
     });
 
@@ -64,7 +64,7 @@ describe('sanitizers', () => {
 
   describe('.trim', () => {
     it('trims a string of whitespace', () => {
-      expect(sanitizers.trim('  \r\n\n\thello!\nYup!  ', {})).to.eql('hello!\nYup!');
+      expect(sanitizers.trim('  \r\n\n\thello!\nYup!  ')).to.eql('hello!\nYup!');
     });
 
     it('trims a string of custom chars', () => {
