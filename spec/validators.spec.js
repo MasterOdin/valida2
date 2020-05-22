@@ -68,7 +68,7 @@ describe('validators', () => {
 
     it('should not validate test for /tset/', () => {
       expect(validators.regex('test', {pattern: /tset/})).to.be.false;
-    })
+    });
   });
 
   describe('.float', () => {
