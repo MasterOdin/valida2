@@ -12,7 +12,11 @@
         "semi": ["error", "always"],
         "quotes": ["error", "single", {"avoidEscape": true}],
         "indent": ["error", 2],
-        "comma-dangle": ["error", "always-multiline"],
+        "comma-dangle": ["error", "always-multiline", {
+            "arrays": "always",
+            "objects": "always",
+            "functions": "never"
+        }],
         "eol-last": ["error", "always"],
         "prefer-arrow-callback": ["error"],
         "arrow-parens": ["error", "always"],
