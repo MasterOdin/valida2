@@ -58,12 +58,9 @@ describe('validators', () => {
       {pattern: /st$/, modifiers: 'g'},
       {pattern: new RegExp(/ES/, 'i')},
     ].forEach((options) => {
-      it(
-        `should validate test for ${options.pattern.toString()} (modifiers: ${options.modifiers || ''})`,
-        () => {
-          expect(validators.regex('test', options)).to.be.true;
-        },
-      );
+      it(`should validate test for ${options.pattern.toString()} (modifiers: ${options.modifiers || ''})`, () => {
+        expect(validators.regex('test', options)).to.be.true;
+      });
     });
 
     it('should not validate test for /tset/', () => {
