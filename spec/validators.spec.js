@@ -55,8 +55,9 @@ describe('validators', () => {
 
     [
       {pattern: /^te(st)t*$/},
-      {pattern: /st$/, modifiers: 'g'},
+      {pattern: /st$/},
       {pattern: new RegExp(/ES/, 'i')},
+      {pattern: 'eS', modifiers: 'i'},
     ].forEach((options) => {
       it(`should validate test for ${options.pattern.toString()} (modifiers: ${options.modifiers || ''})`, () => {
         expect(validators.regex('test', options)).to.be.true;
@@ -129,6 +130,78 @@ describe('validators', () => {
     });
   });
 
+  describe('.plainObject', () => {
+    [undefined, null, {}, {a: true}].forEach((value) => {
+      it(`should validate ${JSON.stringify(value)}`, () => {
+        expect(validators.plainObject(value)).to.be.true;
+      });
+    });
+
+    ['a', true, 0, []].forEach((value) => {
+      it(`should not validate ${JSON.stringify(value)}`, () => {
+        expect(validators.plainObject(value)).to.be.false;
+      });
+    });
+  });
+
+  describe('.date', () => {
+    [undefined, null, new Date()].forEach((value) => {
+      it(`should validate ${JSON.stringify(value)}`, () => {
+        expect(validators.date(value)).to.be.true;
+      });
+    });
+
+    ['a', true, [], {}, Date.now()].forEach((value) => {
+      it(`should not validate ${JSON.stringify(value)}`, () => {
+        expect(validators.date(value)).to.be.false;
+      });
+    });
+  });
+
+  describe('.integer', () => {
+    [undefined, null, -1, 0, 10].forEach((value) => {
+      it(`should validate ${JSON.stringify(value)}`, () => {
+        expect(validators.integer(value)).to.be.true;
+      });
+    });
+
+    ['a', true, 10.5].forEach((value) => {
+      it(`should not validate ${JSON.stringify(value)}`, () => {
+        expect(validators.integer(value)).to.be.false;
+      });
+    });
+  });
+
+  describe('.enum', () => {
+    [undefined, null].forEach((value) => {
+      it(`should validate ${JSON.stringify(value)}`, () => {
+        expect(validators.enum(value)).to.be.true;
+      });
+    });
+
+    it('should validate', () => {
+      expect(validators.enum('blue', {items: ['red', 'green', 'blue']})).to.be.true;
+    });
+
+    it('should not validate', () => {
+      expect(validators.enum('blue', {items: ['red', 'green', 'yellow']})).to.be.false;
+    });
+  });
+
+  describe('.bool', () => {
+    [undefined, null, false, true].forEach((value) => {
+      it(`should validate ${JSON.stringify(value)}`, () => {
+        expect(validators.bool(value)).to.be.true;
+      });
+    });
+
+    ['a', [], {}, new Date()].forEach((value) => {
+      it(`should not validate ${JSON.stringify(value)}`, () => {
+        expect(validators.bool(value)).to.be.false;
+      });
+    });
+  });
+
   describe('.float', () => {
     [undefined, null, 123.423].forEach((value) => {
       it(`should validate ${JSON.stringify(value)}`, () => {
@@ -139,6 +212,42 @@ describe('validators', () => {
     [123, 123.0].forEach((value) => {
       it(`should not validate ${JSON.stringify(value)}`, () => {
         expect(validators.float(value)).to.be.false;
+      });
+    });
+  });
+
+  describe('.range', () => {
+    [undefined, null].forEach((value) => {
+      it(`should validate ${JSON.stringify(value)}`, () => {
+        expect(validators.range(value)).to.be.true;
+      });
+    });
+
+    [0,1,2].forEach((value) => {
+      it(`should validate ${value} with min`, () => {
+        expect(validators.range(value, {max: 2})).to.be.true;
+      });
+
+      it(`should validate ${value} with max`, () => {
+        expect(validators.range(value, {max: 2})).to.be.true;
+      });
+
+      it(`should validate ${value} with min and max`, () => {
+        expect(validators.range(value, {min: 0, max: 2})).to.be.true;
+      });
+    });
+
+    it('should not validate -1 with min', () => {
+      expect(validators.range(-1, {min: 0})).to.be.false;
+    });
+
+    it('should not validate 3 with max', () => {
+      expect(validators.range(3, {max: 2})).to.be.false;
+    });
+
+    [-1, 3].forEach((value) => {
+      it(`should not validate ${value} with min and max`, () => {
+        expect(validators.range(value, {min: 0, max: 2})).to.be.false;
       });
     });
   });
