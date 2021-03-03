@@ -3,6 +3,10 @@ const expect = require('chai').expect;
 
 describe('validators', () => {
   describe('.required', () => {
+    it('should have displayName "required"', () => {
+      expect(validators.required.displayName).to.be.eql('required');
+    });
+
     it('undefined should return value', () => {
       expect(validators.required(undefined)).to.be.false;
     });
