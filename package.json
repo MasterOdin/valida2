@@ -36,6 +36,7 @@
     "url": "http://github.com/esnunes/valida.git"
   },
   "main": "lib/index",
+  "types": "lib/index.d.ts",
   "engines": {
     "node": ">= 0.10.7"
   },
