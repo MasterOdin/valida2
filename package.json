@@ -1,7 +1,7 @@
 {
   "name": "valida2",
   "description": "valida2 - A lightweight sanitizer and validator library for Node.js",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "author": {
     "name": "Eduardo Nunes",
     "email": "esnunes@gmail.com"
@@ -36,7 +36,6 @@
     "url": "http://github.com/esnunes/valida.git"
   },
   "main": "lib/index",
-  "types": "lib/index.d.ts",
   "engines": {
     "node": ">= 0.10.7"
   },
